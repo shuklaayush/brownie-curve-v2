@@ -2,7 +2,6 @@
 from brownie import accounts, chain, interface, web3, Contract, Trader
 
 POOL = "0x50f3752289e1456BfA505afd37B241bca23e685d"
-BADGER = "0x3472A5A71965499acd81997a54BBA8D852C6E53d"
 TREASURY = "0xd0a7a8b98957b9cd3cfb9c0425abe44551158e9e"
 
 AMOUNT = web3.toWei(1_000_000, "ether")
@@ -29,6 +28,8 @@ def main():
     print("-" * 80)
 
     trader.trade()
+
+    print(web3.fromWei(AMOUNT - token0.balanceOf(trader), "ether"))
 
     print("-" * 80)
     print("After trades...")
