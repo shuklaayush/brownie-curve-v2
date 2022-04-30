@@ -5,17 +5,22 @@ import {ICurveV2} from "../interfaces/ICurveV2.sol";
 import {IERC20} from "../interfaces/IERC20.sol";
 
 contract Trader {
-    ICurveV2 public POOL = ICurveV2(0x50f3752289e1456BfA505afd37B241bca23e685d);
-    IERC20 public BADGER = IERC20(0x3472A5A71965499acd81997a54BBA8D852C6E53d);
-    IERC20 public WBTC = IERC20(0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599);
+    ICurveV2 public pool;
+    IERC20 public token0;
+    IERC20 public token1;
 
-    constructor() { 
-        BADGER.approve(address(POOL), type(uint256).max);
-        WBTC.approve(address(POOL), type(uint256).max);
+    constructor(ICurveV2 _pool) { 
+        pool = _pool;
+
+        token0 = IERC20(_pool.coins(0));
+        token1 = IERC20(_pool.coins(1));
+
+        token0.approve(address(_pool), type(uint256).max);
+        token1.approve(address(_pool), type(uint256).max);
     }
 
     function trade() external {
-        POOL.exchange(0, 1, BADGER.balanceOf(address(this)), 0);
-        POOL.exchange(1, 0, WBTC.balanceOf(address(this)), 0);
+        pool.exchange(0, 1, token0.balanceOf(address(this)), 0);
+        pool.exchange(1, 0, token1.balanceOf(address(this)), 0);
     }
 }

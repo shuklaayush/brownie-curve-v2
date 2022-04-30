@@ -2,6 +2,7 @@
 pragma solidity 0.8.13;
 
 interface ICurveV2 {
+    function coins(uint256 arg0) view external returns (address);
     function last_prices() view external returns (uint256);
     function price_oracle() view external returns (uint256);
     function balances(uint256 arg0) view external returns (uint256);
