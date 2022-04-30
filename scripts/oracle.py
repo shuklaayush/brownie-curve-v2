@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 from brownie import accounts, chain, interface, web3, Contract, Trader
 
-POOL = "0x50f3752289e1456BfA505afd37B241bca23e685d"
-TREASURY = "0xd0a7a8b98957b9cd3cfb9c0425abe44551158e9e"
+POOL = "0xF43b15Ab692fDe1F9c24a9FCE700AdCC809D5391"
 
-AMOUNT = web3.toWei(1_000_000, "ether")
+AMOUNT = web3.toWei(10_000, "ether")
 SLEEP_MINS = 30
 
 
@@ -17,7 +16,8 @@ def main():
     token0 = interface.IERC20(trader.token0())
     token1 = interface.IERC20(trader.token1())
 
-    token0.transfer(trader, AMOUNT, {"from": TREASURY})
+    interface.IWeth(token0).deposit({"value": AMOUNT})
+    token0.transfer(trader, AMOUNT)
 
     print("-" * 80)
     print("Initially...")
@@ -28,8 +28,6 @@ def main():
     print("-" * 80)
 
     trader.trade()
-
-    print(web3.fromWei(AMOUNT - token0.balanceOf(trader), "ether"))
 
     print("-" * 80)
     print("After trades...")
